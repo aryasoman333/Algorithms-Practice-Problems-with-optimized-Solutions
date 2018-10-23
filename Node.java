@@ -1,20 +1,16 @@
-/**
- * 
- */
-package com.algo.assignment.day4;
+package com.algo.assignment.day5;
 
 /**
  * @author Arya Soman
- * 
+ *
  */
 public class Node 
 {
-	Node left;
-	Node right;
+	Node Left;
+	Node Right;
 	int data;
-	int hd;
 	
-	Node(int data)
+	public Node(int data)
 	{
 		this.data = data;
 	}

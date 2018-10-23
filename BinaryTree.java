@@ -1,210 +1,129 @@
-/**
- * 
- */
-package com.algo.assignment.day4;
-
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Set;
-import java.util.TreeMap;
+package com.algo.assignment.day5;
 
 /**
  * @author Arya Soman
  *
  */
-public class BinaryTree 
-{	
+public class BinaryTree {
 	Node root;
-	/**
-	 * Constructor that creates a new Binary tree each time an object is created
-	 * @param args
-	 */
-	public BinaryTree() 
+	public Node a;
+    public Node b;
+    //constructor calling a create tree method
+	public BinaryTree()
 	{
-		createBinaryTree();
-	}
+        CreateTree();
+    }
 
+    private void CreateTree(){
+
+        Node node = new Node(1);
+        node.Left = new Node(2);
+        node.Right = new Node(3);
+        node.Left.Left = new Node(4);
+        node.Left.Right = new Node(6);
+        node.Right.Left = new Node(7);
+        node.Right.Right = new Node(5);
+        node.Left.Left.Left = new Node(8);
+        node.Left.Left.Right = new Node(9);
+        node.Left.Right.Left = new Node(10);
+        node.Left.Right.Right = new Node(11);
+        node.Right.Left.Left = new Node(12);
+        node.Right.Left.Right = new Node(13);
+        node.Right.Right.Left = new Node(14);
+        node.Right.Right.Right = new Node(15);
+
+        a = node.Left.Left;
+        b = node.Left.Right.Right;
+        root = node;
+    }
 	/**
-	 * Method to create a binary tree
+	 * method Prints all Full Nodes in a binary tree
+	 * @param node - root node
 	 */
-
-	public void createBinaryTree()
+	public void printFullNodes(Node node)
 	{
-		Node node = new Node(1);
-		node.left = new Node(2);
-		node.right = new Node(3);
-		node.left.left = new Node(4);
-		node.left.right = new Node(5);
-		node.left.right.right = new Node(10);
-		node.left.left.left = new Node(8);
-		node.left.left.left.right = new Node(15);
-		node.left.left.left.right.left = new Node(17);
-		node.left.left.left.right.left.left = new Node(18);
-		node.left.left.left.right.right = new Node(16);
-		node.left.left.right = new Node(9);
-		node.right.left = new Node(6);
-		node.right.left.left = new Node(13);
-		node.right.left.left.left = new Node(14);
-		node.right.right = new Node(7);
-		node.right.right.right = new Node(11);
-		node.right.right.right.right = new Node(12);
-		root = node;
-
-	}
-
-	/**
-	 * Method to print Bottom View of Binary Tree in order from Left to right
-	 * we do level order traversal and put node values and cursors to tree map
-	 * @param args
-	 */
-	public void bottomViewSorted()
-	{
-		int hd = 0;
-		TreeMap<Integer, Node> map = new TreeMap<>();
-		if(root == null)
+		if(node == null)
 			return;
-		Queue<Node> que = new LinkedList<>();
-		root.hd=hd;
-		Node node;
-		que.add(root);
-		
-		while(que.size() != 0)
+		if(node.Left !=null && node.Right != null)
 		{
-			node = que.poll();
-			hd = node.hd;
-			map.put(hd, node);
-			if(node.left != null)
-			{
-				node.left.hd = hd - 1;
-				que.add(node.left);
-			}
-			if(node.right != null)
-			{	
-				node.right.hd = hd + 1;
-				que.add(node.right);
-			}	
+			System.out.print(node.data+",");
 		}
-		Set<Integer> keys = map.keySet();
-
-		for(Integer i : keys)
-		{
-			System.out.println("Key: " +i+ " & Value: " +map.get(i).data);
-		}
+		printFullNodes(node.Left);
+		printFullNodes(node.Right);
 	}
 	
-	/*public void bottomViewSortedtest(Node node, int hd, int cursor)
+	/**
+	 * method prints Middle level for  a perfect tree
+	 * @param fast - pointer that traverses in twice the speed of slow pointer
+	 * @param slow - pointer that traverses in half the speed of fast pointer
+	 */
+	public void printMiddleLevel(Node fast, Node slow)
 	{
-		//int hd = 0;
-		TreeMap<Integer, Queue> map = new TreeMap<>();
-		TreeMap<Integer, Queue> map1 = new TreeMap<>();
-		if(root == null)
+		if(slow == null || fast == null)
 			return;
-		Queue<Node> que = new LinkedList<>();
-		while(node != null)
+		
+		if((fast.Left == null || fast.Left.Left ==null))
 		{
-		que.add(node);
-		map.put(cursor, que);
-		bottomViewSortedtest(node.left,hd+1,cursor-1);
-		bottomViewSortedtest(node.right,hd+1,cursor+1);
+			System.out.print(slow.data+",");
+			return;
 		}
 		
-		Set<Integer> keys = map.keySet();
-
-		for(Integer i : keys)
-		{
-			System.out.println("Key: " +i+ " & Value: " +map.get(i));
-		}
-	}*/
-	
+		printMiddleLevel(fast.Left.Left, slow.Left);
+		printMiddleLevel(fast.Right.Right, slow.Right);
+	}
 	/**
-	 * Method to return maximum width of a tree
-	 * @return returns integer value corresponding to max width
+	 * method to check if all Leaves are at same level 
 	 */
-
-	public int maxWidthOfTree()
+	public void levelCheckForLeaves()
 	{
-		if(root == null)
-			return 0;
-		Queue<Node> que = new LinkedList<>();
-		que.add(root);
-		que.add(null);
-		int maxWidth = 1;
-
-		while(que.size() != 0)
+		int height = findHeight(root);
+		System.out.println("levelCheckForLeaves : "+levelCheckForLeaves(root, height,1));
+	}
+	/**
+	 * Recursive method to check if all Leaves are at same level and if yes returns true, else false
+	 * @param node
+	 * @param height
+	 * @param level
+	 * @return
+	 */
+	public boolean levelCheckForLeaves(Node node, int height , int level)
+	{		
+		if(node == null)
+			return true;
+		if(node.Left == null && node.Right == null)
 		{
-			Node node = que.poll();
-			if(node != null)
-			{
-				if(node.left != null)
-					que.add(node.left);
-				if(node.right != null)
-					que.add(node.right);
-			}
+			if(height == level)
+				return true;
 			else
-			{
-				maxWidth = Math.max(que.size(), maxWidth);
-				if(que.size() == 0)
-					break;
-				que.add(null);
-			}
+				return false;
 		}
-
-		return maxWidth;
+		return levelCheckForLeaves(node.Left, height, level+1) && levelCheckForLeaves(node.Right, height, level+1);
 	}
-
 	/**
-	 * Method to print top view without repetition of root
-	 * we do level order traversal and put node values and cursors to tree map
-	 * check if key is already present, if not add new entry in map(visible from top)
+	 * method to find depth of a tree
+	 * @param node
+	 * @return
 	 */
-
-	public void topViewWithoutRepetition()
+	public int findHeight(Node node)
 	{
-		int hd = 0;
-		TreeMap<Integer, Node> map = new TreeMap<>();
-		if(root == null)
-			return;
-		Queue<Node> que = new LinkedList<>();
-		root.hd=hd;
-		Node node;
-		que.add(root);
-		
-		while(que.size() != 0)
-		{
-			node = que.poll();
-			hd = node.hd;
-			if(!map.containsKey(hd))
-			map.put(hd, node);
-			if(node.left != null)
-			{
-				node.left.hd = hd - 1;
-				que.add(node.left);
-			}
-			if(node.right != null)
-			{	
-				node.right.hd = hd + 1;
-				que.add(node.right);
-			}	
-		}
-		Set<Integer> keys = map.keySet();
-
-		for(Integer i : keys)
-		{
-			System.out.println("Key: " +i+ " & Value: " +map.get(i).data);
-		}
+		if(node == null)
+			return 0;
+		return 1 + Math.max(findHeight(node.Left) , findHeight(node.Right)) ;
 	}
-
+	
+	/**
+	 * testing the functions
+	 * @param args
+	 */
 	public static void main(String[] args) 
 	{
-		// Testing the methods
-
 		BinaryTree tree = new BinaryTree();
-		System.out.println("Printing bottom View from left to right");
-		tree.bottomViewSorted();
-		System.out.println("Max width of tree : " +tree.maxWidthOfTree());
-		System.out.println("Printing top View Without Repetition");
-	//	tree.bottomViewSortedtest(tree.root, 0, 0);
-		
+		System.out.println("Printing full nodes");
+		tree.printFullNodes(tree.root);
+		System.out.println("\nPrinting middle level nodes");
+		tree.printMiddleLevel(tree.root, tree.root);
+		System.out.println();
+		tree.levelCheckForLeaves();
 	}
 
 }
